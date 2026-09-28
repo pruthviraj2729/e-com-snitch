@@ -1,4 +1,5 @@
 export const authEndpoints = {
-  login: '/api/auth/login',
-  signup: '/api/auth/signup',
+  login: '/auth/login',
+  signup: '/auth/register',
+  logout: '/auth/logout',
 }

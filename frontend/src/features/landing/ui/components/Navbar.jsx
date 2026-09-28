@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowUpRight, Menu, ShoppingBag, X } from 'lucide-react'
+import { ArrowUpRight, LogOut, Menu, PackagePlus, ShoppingBag, X } from 'lucide-react'
 import { useCart } from '../../hooks/useCart.js'
+import { useAuthSession } from '../../../auth/state/useAuthSession.js'
 
 const links = [
   { label: 'New arrivals', href: '#featured' },
@@ -12,6 +13,13 @@ const links = [
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const { count } = useCart()
+  const { accessToken, user, signOut } = useAuthSession()
+  const isSeller = user?.role === 'seller'
+
+  function handleSignOut() {
+    signOut()
+    setMenuOpen(false)
+  }
 
   return (
     <>
@@ -25,13 +33,23 @@ export default function Navbar() {
             <a key={link.label} href={link.href} onClick={() => setMenuOpen(false)}>{link.label}</a>
           ))}
           <div className="mobile-account-links">
-            <Link to="/login" onClick={() => setMenuOpen(false)}>Log in</Link>
-            <Link to="/signup" onClick={() => setMenuOpen(false)}>Sign up <ArrowUpRight size={14} /></Link>
+            {isSeller ? (
+              <Link to="/seller" onClick={() => setMenuOpen(false)}>Seller studio <PackagePlus size={14} /></Link>
+            ) : accessToken ? (
+              <button type="button" onClick={handleSignOut}>Sign out <LogOut size={14} /></button>
+            ) : (
+              <><Link to="/login" onClick={() => setMenuOpen(false)}>Log in</Link><Link to="/signup" onClick={() => setMenuOpen(false)}>Sign up <ArrowUpRight size={14} /></Link></>
+            )}
           </div>
         </nav>
         <div className="header-actions">
-          <Link className="login-link" to="/login">Log in</Link>
-          <Link className="signup-link" to="/signup">Sign up <ArrowUpRight size={14} /></Link>
+          {isSeller ? (
+            <Link className="seller-studio-link" to="/seller"><PackagePlus size={15} /> Seller studio</Link>
+          ) : accessToken ? (
+            <button className="signout-link" type="button" onClick={handleSignOut}>Sign out</button>
+          ) : (
+            <><Link className="login-link" to="/login">Log in</Link><Link className="signup-link" to="/signup">Sign up <ArrowUpRight size={14} /></Link></>
+          )}
           <a className="bag-link" href="#featured" aria-label={`Shopping bag, ${count} items`}>
             <ShoppingBag size={17} strokeWidth={1.6} /><span>Bag ({count})</span>
           </a>

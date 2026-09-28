@@ -13,6 +13,16 @@ const productSchema = new mongoose.Schema({
         minLength: 20,
         maxLength: 500
     },
+    category: {
+        type: String,
+        enum: ["Women", "Men"],
+        required: true
+    },
+    type: {
+        type: String,
+        enum: ["T-shirts", "Jeans", "Cargo pants", "Polos", "Shirts", "Outerwear", "Trousers", "Knitwear"],
+        required: true
+    },
     images: {
         type: [ {
             type: String

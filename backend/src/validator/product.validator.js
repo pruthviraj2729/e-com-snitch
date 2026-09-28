@@ -1,4 +1,4 @@
-import { body, validationResult } from "express-validator"
+import { body, param, validationResult } from "express-validator"
 
 export const createProductValidator = [
     body("title")
@@ -6,12 +6,19 @@ export const createProductValidator = [
         .isString().withMessage("Title must be a string").bail()
         .trim()
         .isLength({ min: 2, max: 100 }).withMessage("Title length must be between 2 to 100 characters").bail()
-        .isAlpha("en-US", { ignore: " " }).withMessage("Title can only have english small case and capital case character"),
+        .matches(/^[a-zA-Z0-9 '&-]+$/).withMessage("Title can only contain letters, numbers, spaces, apostrophes, and hyphens"),
     body("description")
         .exists().withMessage("Description is required").bail()
         .isString().withMessage("Description must be String").bail()
         .trim()
         .isLength({ min: 20, max: 500 }).withMessage("Description length must be between 20 to 500 characters"),
+    body("category")
+        .exists().withMessage("Category is required").bail()
+        .isIn(["Women", "Men"]).withMessage("Category must be Women or Men"),
+    body("type")
+        .exists().withMessage("Product type is required").bail()
+        .isIn(["T-shirts", "Jeans", "Cargo pants", "Polos", "Shirts", "Outerwear", "Trousers", "Knitwear"])
+        .withMessage("Choose a supported clothing type"),
     body("price.amount")
         .exists().withMessage("price amount is required").bail()
         .isFloat({ min: 0 }).withMessage("price amount must be a floating number and must be greater that 0"),
@@ -46,7 +53,7 @@ export const createProductValidator = [
 ]
 
 export const unlistProductValidator = [
-    body("id")
+    param("id")
         .exists().withMessage("product id is required in req params").bail()
         .isMongoId().withMessage("product is must be a valid mongo object id"),
     (req, res, next) => {
@@ -64,7 +71,7 @@ export const unlistProductValidator = [
 
 
 export const listProductValidator = [
-    body("id")
+    param("id")
         .exists().withMessage("product id is required in req params").bail()
         .isMongoId().withMessage("product is must be a valid mongo object id"),
     (req, res, next) => {

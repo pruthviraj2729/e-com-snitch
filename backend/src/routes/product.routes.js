@@ -29,7 +29,7 @@ router.post('/', authMiddleware, authenticateSeller, upload.array("images"),
 },createProductValidator,createProductsController)
 
 
-router.get('/', authMiddleware, listAllProductrs)
+router.get('/', listAllProductrs)
 
 router.get('/seller', authMiddleware, authenticateSeller, listAllProductsToSeller)
 

@@ -20,6 +20,8 @@ export const createProductsController = async(req, res) => {
     const product = await productModel.create({
         title: req.body.title,
         description: req.body.description,
+        category: req.body.category,
+        type: req.body.type,
         price: {
             amount: req.body.price.amount,
             currency: req.body.price.currency
@@ -49,7 +51,7 @@ export async function listAllProductrs(req,res) {
 }
 
 export async function listAllProductsToSeller(req, res) {
-    const products = await productModel.find({})
+    const products = await productModel.find({ seller: req.user.userId })
 
     return res.status(200).json({
         message: "All products featched successfully",
@@ -62,7 +64,7 @@ export async function listAllProductsToSeller(req, res) {
 export async function unlistProduct(req, res) {
     const {id} = req.params
 
-    const product = await productModel.findById(id)
+    const product = await productModel.findOne({ _id: id, seller: req.user.userId })
 
     if(!product) {
         return res.status(404).json({
@@ -83,7 +85,7 @@ export async function unlistProduct(req, res) {
 export async function listProduct(req, res) {
     const {id} = req.params
 
-    const product = await productModel.findById(id)
+    const product = await productModel.findOne({ _id: id, seller: req.user.userId })
 
     if (!product) {
         return res.status(404).json({

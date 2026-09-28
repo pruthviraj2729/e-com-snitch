@@ -2,8 +2,7 @@ import Navbar from '../components/Navbar.jsx'
 import LookbookMarquee from '../components/LookbookMarquee.jsx'
 import Hero from '../components/Hero.jsx'
 import ProductGrid from '../components/ProductGrid.jsx'
-import Editorial from '../components/Editorial.jsx'
-import Newsletter from '../components/Newsletter.jsx'
+import StylePlaybook from '../components/StylePlaybook.jsx'
 import Footer from '../components/Footer.jsx'
 
 export default function LandingPage() {
@@ -19,8 +18,7 @@ export default function LandingPage() {
           <span>Free shipping over $150</span>
         </div>
         <ProductGrid />
-        <Editorial />
-        <Newsletter />
+        <StylePlaybook />
       </main>
       <Footer />
     </div>

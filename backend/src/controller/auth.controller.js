@@ -53,7 +53,8 @@ export async function registerController(req, res) {
                 user: {
                     email: user.email,
                     name: user.name,
-                    id: user._id
+                    id: user._id,
+                    role: user.role
                 },
                 accessToken
             }
@@ -111,7 +112,8 @@ export async function loginController (req, res) {
             user: {
                 id: user._id,
                 email: user.email,
-                name: user.name
+                name: user.name,
+                role: user.role
             },
             accessToken
         }
@@ -175,7 +177,8 @@ export async function refreshTokenController(req, res) {
                 user: {
                     email: user.email,
                     name: user.name,
-                    id: user._id
+                    id: user._id,
+                    role: user.role
                 },
                 accessToken
             }
@@ -203,8 +206,23 @@ export async function getMe(req, res) {
             user: {
                 email: user.email,
                 name: user.name,
-                id: user._id
+                id: user._id,
+                role: user.role
             }
         }
+    })
+}
+
+export async function logoutController(req, res) {
+    await userModel.findByIdAndUpdate(req.user.userId, {
+        refreshToken: null
+    })
+
+    res.clearCookie("refreshToken", {
+        httpOnly: true
+    })
+
+    return res.status(200).json({
+        message: "Logged out successfully"
     })
 }
