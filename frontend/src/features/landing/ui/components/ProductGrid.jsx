@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Plus } from 'lucide-react'
 import { collections, products } from '../../api/products.js'
 import { getPublishedProducts, productQueryKeys } from '../../api/productApi.js'
 import { useCart } from '../../hooks/useCart.js'
+import useApi from '../../../../config/axios.jsx'
 
 const categories = [
   { label: 'T-shirts', filter: 'T-shirts', productId: 'everyday-tee' },
@@ -36,9 +37,10 @@ export default function ProductGrid() {
   const categoriesRef = useRef(null)
   const productsRef = useRef(null)
   const { addItem } = useCart()
+  const axiosInstance = useApi()
   const publishedProductsQuery = useQuery({
     queryKey: productQueryKeys.published,
-    queryFn: getPublishedProducts,
+    queryFn: ({ signal }) => getPublishedProducts(axiosInstance, { signal }),
   })
   const sellerProducts = (publishedProductsQuery.data || []).map((product) => ({
     id: product._id,

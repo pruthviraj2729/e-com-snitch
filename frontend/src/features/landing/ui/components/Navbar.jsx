@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowUpRight, LogOut, Menu, PackagePlus, ShoppingBag, X } from 'lucide-react'
 import { useCart } from '../../hooks/useCart.js'
-import { useAuthSession } from '../../../auth/state/useAuthSession.js'
+import { MyStore } from '../../../../context/MyStore.jsx'
 
 const links = [
   { label: 'New arrivals', href: '#featured' },
@@ -13,7 +13,7 @@ const links = [
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const { count } = useCart()
-  const { accessToken, user, signOut } = useAuthSession()
+  const { accessToken, user } = useContext(MyStore)
   const isSeller = user?.role === 'seller'
 
   function handleSignOut() {

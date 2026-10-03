@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ArrowLeft, ArrowUpRight, ImagePlus, LogOut, Plus, RefreshCw } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
@@ -8,25 +8,27 @@ import {
   productQueryKeys,
   setProductPublished,
 } from '../../../landing/api/productApi.js'
-import { useAuthSession } from '../../../auth/state/useAuthSession.js'
+import { MyStore } from '../../../../context/MyStore.jsx'
+import useApi from '../../../../config/axios.jsx'
 
 const apparelTypes = ['T-shirts', 'Jeans', 'Cargo pants', 'Polos', 'Shirts', 'Outerwear', 'Trousers', 'Knitwear']
 const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
 
 export default function SellerDashboardPage() {
-  const { accessToken, user, signOut } = useAuthSession()
+  const { accessToken, user } = useContext(MyStore)
+  const axiosInstance = useApi()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [notice, setNotice] = useState('')
   const [error, setError] = useState('')
   const productsQuery = useQuery({
     queryKey: productQueryKeys.seller,
-    queryFn: getSellerProducts,
+    queryFn: ({ signal }) => getSellerProducts(axiosInstance, { signal }),
     enabled: Boolean(accessToken),
   })
   const products = productsQuery.data || []
   const createMutation = useMutation({
-    mutationFn: createProduct,
+    mutationFn: (productForm) => createProduct(axiosInstance, productForm),
     onSuccess: async () => {
       setNotice('Product saved as a draft. Publish it when it is ready for the store.')
       await Promise.all([
@@ -36,7 +38,7 @@ export default function SellerDashboardPage() {
     },
   })
   const publishMutation = useMutation({
-    mutationFn: setProductPublished,
+    mutationFn: (variables) => setProductPublished(axiosInstance, variables),
     onSuccess: async (_, variables) => {
       setNotice(variables.published ? 'Product removed from the store.' : 'Product is now live in the store.')
       await Promise.all([

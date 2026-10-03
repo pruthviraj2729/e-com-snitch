@@ -4,10 +4,11 @@ import LoginPage from '../features/auth/ui/pages/LoginPage.jsx'
 import SignupPage from '../features/auth/ui/pages/SignupPage.jsx'
 import DashboardPage from '../features/dashboard/ui/pages/DashboardPage.jsx'
 import SellerDashboardPage from '../features/dashboard/ui/pages/SellerDashboardPage.jsx'
-import { useAuthSession } from '../features/auth/state/useAuthSession.js'
+import { useContext } from 'react'
+import { MyStore } from '../context/MyStore.jsx'
 
 function SellerRoute({ children }) {
-  const { accessToken, user } = useAuthSession()
+  const { accessToken, user } = useContext(MyStore)
 
   if (!accessToken) return <Navigate to="/login" replace />
   if (user?.role !== 'seller') return <Navigate to="/" replace />
