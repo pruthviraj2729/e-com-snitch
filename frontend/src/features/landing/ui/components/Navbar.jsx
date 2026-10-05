@@ -1,13 +1,17 @@
 import { useContext, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { ArrowUpRight, LogOut, Menu, PackagePlus, ShoppingBag, X } from 'lucide-react'
 import { useCart } from '../../hooks/useCart.js'
 import { MyStore } from '../../../../context/MyStore.jsx'
 
+
+
 const links = [
-  { label: 'New arrivals', href: '#featured' },
-  { label: 'Clothing', href: '#featured' },
-  { label: 'Our approach', href: '#story' },
+  { label: 'New arrivals', path: '/new-arrivals' },
+  { label: 'For her', path: '/for-her-collection' },
+  { label: 'For him', path: '/for-him-collection' },
+  { label: 'Clothing', path: '/clothing' },
+  { label: 'Our approach', path: '/our-approach' },
 ]
 
 export default function Navbar() {
@@ -30,7 +34,7 @@ export default function Navbar() {
         <Link className="wordmark" to="/" aria-label="Seven home">SEVEN<span>.</span></Link>
         <nav className={`main-nav ${menuOpen ? 'is-open' : ''}`} aria-label="Main navigation">
           {links.map((link) => (
-            <a key={link.label} href={link.href} onClick={() => setMenuOpen(false)}>{link.label}</a>
+            <a key={link.label} href={link.path} onClick={() => setMenuOpen(false)}>{link.label}</a>
           ))}
           <div className="mobile-account-links">
             {isSeller ? (

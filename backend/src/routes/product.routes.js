@@ -1,6 +1,6 @@
 import { json, Router } from "express"
 import { authMiddleware, authenticateSeller } from "../middlewares/auth.mmiddleware.js"
-import  {createProductsController, listAllProductrs, listAllProductsToSeller, listProduct, unlistProduct} from "../controller/products.controller.js"
+import  {createProductsController, getProductsController, listAllProductrs, listAllProductsToSeller, listProduct, unlistProduct} from "../controller/products.controller.js"
 import multer from "multer"
 import {createProductValidator, listProductValidator, unlistProductValidator} from '../validator/product.validator.js'
 
@@ -30,6 +30,8 @@ router.post('/', authMiddleware, authenticateSeller, upload.array("images"),
 
 
 router.get('/', listAllProductrs)
+
+router.get('/category', getProductsController)
 
 router.get('/seller', authMiddleware, authenticateSeller, listAllProductsToSeller)
 

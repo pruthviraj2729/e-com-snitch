@@ -18,6 +18,7 @@ export async function createProduct(axiosInstance, productForm) {
   return response.data.data.product
 }
 
+
 export async function setProductPublished(axiosInstance, { id, published }) {
   const action = published ? 'unlist' : 'list'
   const response = await axiosInstance.patch(`/products/${action}/${id}`)

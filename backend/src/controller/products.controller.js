@@ -39,6 +39,34 @@ export const createProductsController = async(req, res) => {
 }
 
 
+export const getProductsController = async (req, res) => {
+    try {
+        const {category} = req.query
+        const filter = {
+            published: true
+        }
+
+        if (category) {
+            filter.category = category
+        }
+
+        const products = await productModel.find(filter).sort({createdAt: -1})
+
+        res.status(200).json({
+            success: true,
+            count: products.length,
+            products
+        })
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        })
+    }
+}
+
+
 export async function listAllProductrs(req,res) {
     const products = await productModel.find({published: true})
 
